@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache,must-revalidate">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>Miloy.刷题</title>
+    <link rel="stylesheet" href="./css/iview.css">
+
+    <style>
+        .title {
+            text-align: center; /* 标题居中对齐 */
+            margin-top: 2vw; /* 顶部外边距 */
+        }
+
+        .questionList {
+            width: 96vw; /* 问题列表宽度 */
+            margin: 2vw auto 0; /* 自动外边距居中对齐 */
+        }
+
+        .question {
+            margin-top: 2vw; /* 问题之间的间距 */
+        }
+
+        .author {
+            text-align: right; /* 右对齐 */
+            padding-right: 3.2vw; /* 右侧内边距 */
+            margin-bottom: 1.5vw; /* 底部外边距 */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="el">
+        <h1 class='title'>题库</h1> <!-- 页面主标题 -->
+
+        <div class="questionList">
+            <!-- 遍历问题列表并生成相应的卡片 -->
+            <div v-for="i in jsonList" @click='goNext(i.id, i.file)'>
+                <Card class="question">
+                    <p slot="title">{{i.name}}</p> <!-- 问题名称 -->
+                    {{i.describe}} <!-- 问题描述 -->
+                </Card>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的 JavaScript 文件 -->
+    <script src="./js/public.js?version=1.0"></script>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/iview.min.js"></script>
+    <script>
+        const vue = new Vue({
+            el: "#el", // Vue 实例挂载的 DOM 元素
+            data: {
+                jsonList: JSONList // 在数据中存储问题列表
+            },
+            methods: {
+                // 跳转到下一个页面并存储问题 ID 和文件名到 sessionStorage
+                goNext: function(id, file) {
+                    sessionStorage.id = id; // 存储问题 ID
+                    sessionStorage.file = file; // 存储文件名
+                    window.location.href = "./type.html"; // 跳转到题型页面
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

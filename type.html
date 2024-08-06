@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache,must-revalidate">
+    <meta http-equiv="Cache" content="no-cache">
+    <title>答题类型选择</title>
+    <link rel="stylesheet" href="./css/iview.css">
+    <style>
+        .typeList {
+            width: 95vw; /* 设置类型列表的宽度 */
+            margin: 2vw auto; /* 设置类型列表的上下外边距并居中 */
+        }
+        .typeList > div {
+            margin-top: 2vw; /* 设置每个类型项的顶部外边距 */
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="el">
+        <!-- 提示用户选择答题模式 -->
+        <p style="margin-left:3vw; margin-top: 3vw; font-size: 0.9rem;">
+            请选择答题模式：
+        </p>      
+        <div class="typeList">
+            <!-- 遍历类型列表，生成答题类型的卡片 -->
+            <div v-for="i in typeList" @click='goNext(i.id)'>
+                <Card class="timu">
+                    {{i.name}} <!-- 显示答题模式名称 -->
+
+                </Card>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的 JavaScript 文件 -->
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/iview.min.js"></script>
+    <script>
+        // 创建 Vue 实例
+        const vue = new Vue({
+            el: "#el", // 挂载到 ID 为 el 的元素上
+
+            data: {
+                // 定义答题类型列表
+                typeList: [
+                    { id: 'random', name: "乱序答题" },
+                    { id: 'order', name: "顺序答题" },
+                    { id: 'recite', name: "背题模式" },
+                    { id: 'wrong', name: "错题模式" }
+                ]
+            },
+            methods: {
+                // 跳转到问题页面并存储所选类型
+                goNext(id) {
+                    sessionStorage.type = id; // 存储答题模式类型到 sessionStorage
+                    window.location.href = "./question.html"; // 跳转到问题页面
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
