@@ -209,20 +209,23 @@
                         }
                     }
 
-                    // 处理答案结果并记录错题
-                    if (this.result) {
-                        setTimeout(() => {
-                            this.next();
-                        }, 800);
-                    } else {
-
-                        if (!localStorage["wrong_" + this.fileId]) {
-                            localStorage["wrong_" + this.fileId] = JSON.stringify([]);
-                        }
-                        let wrong = JSON.parse(localStorage["wrong_" + this.fileId]);
-                        if (wrong.indexOf(this.question.question_index) === -1) {
-                            wrong.push(this.question);
-                            localStorage["wrong_" + this.fileId] = JSON.stringify(wrong);
+                        // 错题模式不自动跳转以及记录错题
+                    if (sessionStorage.type != "wrong") {
+                        console.log(sessionStorage.type);
+                        // 处理答案结果并记录错题                    
+                        if (this.result) {
+                            setTimeout(() => {
+                                this.next();
+                            }, 2000);
+                        } else {
+                            if (!localStorage["wrong_" + this.fileId]) {
+                                localStorage["wrong_" + this.fileId] = JSON.stringify([]);
+                            }
+                            let wrong = JSON.parse(localStorage["wrong_" + this.fileId]);
+                            if (wrong.indexOf(this.question.question_index) === -1) {
+                                wrong.push(this.question);
+                                localStorage["wrong_" + this.fileId] = JSON.stringify(wrong);
+                            }
                         }
                     }
                     this.answer = true; // 显示答案
