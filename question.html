@@ -137,9 +137,72 @@
             font-size: medium;
         }
     </style>
+
+    <style media="screen" type="text/css">
+        .loading {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background-color: #000;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 9999;
+            opacity: 0.8;
+        }
+
+        .loading.fixed  {
+            position: fixed;
+        }
+
+        .loading:before {
+            content: '加载中，请耐心等待，如长时间未加载成功，请刷新或者联系管理员。';
+            background-color: rgba(0,0,0,0);
+            border: 5px solid rgba(0,183,229,0.9);
+            opacity: .9;
+            border-right: 5px solid rgba(0,0,0,0);
+            border-left: 5px solid rgba(0,0,0,0);
+            border-radius: 200px;
+            box-shadow:0 0 35px #2187e7;
+            width: 200px;
+            height: 200px;
+            margin:-25px 0 0 -25px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            text-align: center;
+            line-height: 1.5;
+            align-content: center;
+        }
+
+        .loadingtafter {
+            content:"加载完成";
+            background-color: rgba(0,0,0,0);
+            border: 5px solid rgba(0,183,229,0.9);
+            opacity: .9;
+            border-left: 5px solid rgba(0,0,0,0);
+            border-right: 5px solid rgba(0,0,0,0);
+            border-radius: 50px;
+            box-shadow:0 0 15px #2187e7;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            text-align: center;
+            line-height: 1.5;
+            align-content: center;
+        }
+    </style>
 </head>
 
 <body>
+    <div id="apploading">
+        <div class="loading">
+        </div>
+    </div>
     <div id="el">
         <!-- 显示当前题目和总题目数 -->
         <p class='process'>第{{page + 1}}题，共{{data.length}}题</p>
@@ -373,7 +436,12 @@
                     setTimeout(() => {
                         this.toastShow = false;
                     }, 800);
-                }   
+                },
+                
+                loadingSuccess() {
+                    document.getElementById('el').style.display = 'block';
+                    document.getElementById('apploading').style.display = 'none';
+                }
             },
             created() {
                 this.fileName = sessionStorage.file;
@@ -408,9 +476,9 @@
                         if (sessionStorage.type === "order" || sessionStorage.type === "recite") {
                             this.recovery(sessionStorage.type);
                         }
-
                         // 初始化题目
                         this.initquestion();
+                        this.loadingSuccess();
                     })
                     .catch((error) => {
                         this.$Message.error('发生错误！');
