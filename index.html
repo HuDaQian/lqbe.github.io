@@ -14,23 +14,35 @@
     <style>
         .title {
             text-align: center; /* 标题居中对齐 */
-            margin-top: 2vw; /* 顶部外边距 */
+            margin-top: 2%; /* 顶部外边距 */
         }
 
         .questionList {
-            width: 96vw; /* 问题列表宽度 */
-            margin: 2vw auto 0; /* 自动外边距居中对齐 */
+            width: 96%; /* 问题列表宽度 */
+            margin: 2% auto 0; /* 自动外边距居中对齐 */
         }
 
         .question {
-            margin-top: 2vw; /* 问题之间的间距 */
+            margin-top: 2%; /* 问题之间的间距 */
+        }
+        
+        .contact-button {
+            position: fixed;
+            width: 200px;
+            bottom: 20px; /* 距离底部的距离 */
+            left: 20px; /* 距离右侧的距离 */
+            background-color: #2187e7; /* 背景颜色 */
+            color: white; /* 文字颜色 */
+            padding: 10px 20px; /* 内边距 */
+            border-radius: 5px; /* 圆角 */
+            font-size: 16px; /* 字体大小 */
         }
 
-        .author {
-            text-align: right; /* 右对齐 */
-            padding-right: 3.2vw; /* 右侧内边距 */
-            margin-bottom: 1.5vw; /* 底部外边距 */
+        .contact-button:hover {
+            background-color: #0e6abf; /* 鼠标悬停时的背景颜色 */
+            cursor: pointer; /* 鼠标悬停时的光标样式 */
         }
+
     </style>
 </head>
 
@@ -47,8 +59,10 @@
                 </Card>
             </div>
         </div>
+        <div>
+            <i-button class="contact-button" @click='contactMe' long>有问题请联系我📱</i-button>
+        </div>
     </div>
-
     <!-- 引入必要的 JavaScript 文件 -->
     <script src="./js/public.js?version=1.0"></script>
     <script src="./js/vue.min.js"></script>
@@ -65,6 +79,9 @@
                     sessionStorage.id = id; // 存储问题 ID
                     sessionStorage.file = file; // 存储文件名
                     window.location.href = "./type.html"; // 跳转到题型页面
+                },
+                contactMe: function() {
+                    alert("Tel/WX:+86 13598724649");
                 }
             }
         });

@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="./css/iview.css">
     <style>
         .typeList {
-            width: 95vw; /* 设置类型列表的宽度 */
-            margin: 2vw auto; /* 设置类型列表的上下外边距并居中 */
+            width: 95%; /* 设置类型列表的宽度 */
+            margin: 2% auto; /* 设置类型列表的上下外边距并居中 */
         }
         .typeList > div {
-            margin-top: 2vw; /* 设置每个类型项的顶部外边距 */
+            margin-top: 2%; /* 设置每个类型项的顶部外边距 */
 
         }
     </style>
@@ -32,8 +32,8 @@
             <!-- 遍历类型列表，生成答题类型的卡片 -->
             <div v-for="i in typeList" @click='goNext(i.id)'>
                 <Card class="timu">
-                    {{i.name}} <!-- 显示答题模式名称 -->
-
+                    <p slot="title">{{i.name}}</p> <!-- 显示答题模式名称 -->
+                    {{i.desc}}
                 </Card>
             </div>
         </div>
@@ -50,10 +50,10 @@
             data: {
                 // 定义答题类型列表
                 typeList: [
-                    { id: 'recite', name: "背题模式" },
-                    { id: 'order', name: "顺序答题" },
-                    { id: 'random', name: "乱序答题" },
-                    { id: 'wrong', name: "错题模式" }
+                    { id: 'recite', name: "背题模式", desc: "直接显示答案，快速背题"},
+                    { id: 'order', name: "顺序答题", desc: "按题库顺序答题" },
+                    { id: 'random', name: "乱序答题", desc: "打乱题库顺序答题" },
+                    { id: 'wrong', name: "错题模式", desc: "查看曾经做错过的题目" }
                 ]
             },
             methods: {
