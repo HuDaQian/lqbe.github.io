@@ -10,6 +10,9 @@ def transform_answers(row):
         print("type error.")
         return ""
     new_value = options.replace("：", ":").replace("\n","").replace("\r","").strip()
+    # 增加中文顿号处理，选项中顿号正常使用的有且只有一例，所以判断处理下
+    if "A、B" not in options:
+        new_value = new_value.replace("、", ":")
     print(new_value)
     if "判断题" == row["question_class"]:
         return "对|错"
