@@ -216,7 +216,7 @@
                         if (this.result) {
                             setTimeout(() => {
                                 this.next();
-                            }, 2000);
+                            }, 800);
                         } else {
                             if (!localStorage["wrong_" + this.fileId]) {
                                 localStorage["wrong_" + this.fileId] = JSON.stringify([]);
