@@ -74,13 +74,14 @@
         }
 
         .result.success {
-            border: 1px solid #8ce6b0;
-            background-color: #edfff3;
+            border: 2px solid #2c9249;
+            background-color: blanchedalmond;
+            font-size: large, bold;
         }
-
         .result.warning {
-            border: 1px solid #ffd77a;
-            background-color: #fff9e6;
+            border: 3px solid #ef0a43;
+            background-color: blanchedalmond;
+            font-size: medium, bold;
         }
 
         .result.info {
@@ -136,15 +137,15 @@
             </div>
 
             <!-- 显示结果 -->
-            <div type="success" v-if='answer && result === 1' class='result success'>恭喜回答正确</div>
-            <div type="warning" v-if='answer && result === 0' class='result warning'>抱歉回答错误了哦！</div>
-            <div v-if='answer' class="answer">答案：{{question.question_correct}}</div>
+            <div type="success" v-if='answer && result === 1' class='result success'>✅ 恭喜你，回答正确！</div>
+            <div type="warning" v-if='answer && result === 0' class='result warning'>❌ 抱歉，回答错误了哦！</div>
+            <div v-if='answer' class="answer">正确答案：{{question.question_correct}}</div>
             <div v-if='answer' class="analysis">解析：{{question.answer_content ? question.answer_content : '该答案暂无解析'}}</div>
             <div v-if='answer' class="analysis">参考：【{{question.answer_book}}】【{{question.answer_paragraph}}】【{{question.answer_item}}】【{{question.answer_section}}】</div>
         </Card>
 
         <!-- 确定答案按钮 -->
-        <i-button class="confirm" type="primary" :disabled='userAnswer.length === 0' @click='confirm' size="large" long>确定答案</i-button>
+        <i-button class="confirm" type="primary" :disabled='userAnswer.length === 0' @click='confirm' size="large" long>确认</i-button>
 
 
         <!-- 删除错题按钮 -->
@@ -153,7 +154,7 @@
         </i-button>
 
         <!-- 翻页控制 -->
-        <ButtonGroup class="pageControl">
+        <ButtonGroup v-if='answer' class="pageControl">
             <i-button type="primary" @click="prev">上一题</i-button>
             <i-button type="primary" @click="next">下一题</i-button>
         </ButtonGroup>
