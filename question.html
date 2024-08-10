@@ -219,7 +219,7 @@
         </Card>
 
         <!-- 确定答案按钮 -->
-        <i-button v-if='sessionStorage.type != "wrong" && isMultiSelect' class="confirm" type="primary" :disabled='userAnswer.length === 0' @click='confirm' size="large" long>确认</i-button>
+        <i-button v-if='sessionStorage.type != "recite" && isMultiSelect' class="confirm" type="primary" :disabled='userAnswer.length === 0' @click='confirm' size="large" long>确认</i-button>
 
 
         <!-- 删除错题按钮 -->
@@ -229,6 +229,7 @@
 
         <!-- 翻页控制 -->
         <ButtonGroup v-if='answer' class="pageControl">
+            <i-button v-if='sessionStorage.type == "recite"' type="primary" @click="collect">收藏至错题本</i-button>
             <i-button type="primary" @click="prev">上一题</i-button>
             <i-button type="primary" @click="next">下一题</i-button>
         </ButtonGroup>
@@ -256,7 +257,10 @@
             },
             methods: {
                 select(k) {
-                    // 选择答案
+                    if (sessionStorage.type == "recite") {
+                        return
+                    }
+                    // 选择答案                    
                     // 单选直接确认答案
                     if (!this.isMultiSelect) {
                         this.userAnswer = [];
@@ -301,23 +305,36 @@
                                 this.next();
                             }, 800);
                         } else {
-                            if (!localStorage["wrong_" + this.fileId]) {
-                                localStorage["wrong_" + this.fileId] = JSON.stringify([]);
-                            }
-                            let wrong = JSON.parse(localStorage["wrong_" + this.fileId]);
-                            let currentIndex = this.question.question_index;
-                            let include = wrong.some(function(item) {
-                                return item.question_index === currentIndex;
-                            });
-                            if (!include) {
-                                wrong.push(this.question);
-                                this.questionChangeAlert(true);
-                                localStorage["wrong_" + this.fileId] = JSON.stringify(wrong);
-                            }
+                            this.addToDatabase();
                         }
                     }
                     this.answer = true; // 显示答案
                 },
+
+                collect() {
+                    this.addToDatabase();
+                },
+
+                addToDatabase() {
+                    if (!localStorage["wrong_" + this.fileId]) {
+                        localStorage["wrong_" + this.fileId] = JSON.stringify([]);
+                    }
+                    let wrong = JSON.parse(localStorage["wrong_" + this.fileId]);
+                    let currentIndex = this.question.question_index;
+                    let include = wrong.some(function(item) {
+                        return item.question_index === currentIndex;
+                    });
+                    if (!include) {
+                        wrong.push(this.question);
+                        this.questionChangeAlert("insert");
+                        localStorage["wrong_" + this.fileId] = JSON.stringify(wrong);
+                    } else {
+                        if (sessionStorage.type == "recite") {
+                            this.questionChangeAlert("exist");
+                        }
+                    }
+                },
+
                 recovery(type) {
                     // 恢复答题进度
                     if (localStorage[type + '_' + this.fileId] && Number(localStorage[type + '_' + this.fileId])) {
@@ -336,11 +353,13 @@
                     // 删除错题
                     let wrong = JSON.parse(localStorage["wrong_" + this.fileId]);
                     let index = wrong.indexOf(this.question.question_index);
-
                     wrong.splice(index, 1);
+                    this.questionChangeAlert("delete");
                     localStorage["wrong_" + this.fileId] = JSON.stringify(wrong);
-                    this.questionChangeAlert(false);
-                    window.location.reload();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+
                 },
                 next() {
                     // 下一题
@@ -404,11 +423,13 @@
                     return this.randomArray(wrong);
                 },
 
-                questionChangeAlert(insert) {
-                    if (insert) {
+                questionChangeAlert(status) {
+                    if (status == "insert") {
                         this.$Message.success('已加入错题本，可以选择错题模式强化练习！');
-                    } else {
+                    } else if (status == "delete") {
                         this.$Message.success('已从错题本中删除！');
+                    } if (status == "exist") {
+                        this.$Message.success('错题本已存在该题目！');
                     }
                 },
 
