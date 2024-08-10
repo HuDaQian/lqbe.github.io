@@ -125,19 +125,6 @@
         }        
     </style>
 
-    <style scoped>
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #cfc8c8;
-            color: #430c0c;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: medium;
-        }
-    </style>
-
     <style media="screen" type="text/css">
         .loading {
             position: absolute;
@@ -199,11 +186,11 @@
 </head>
 
 <body>
-    <div id="apploading">
+    <div id="apploading" style="display: none">
         <div class="loading">
         </div>
     </div>
-    <div id="el">
+    <div id="el" style="display: block">
         <!-- 显示当前题目和总题目数 -->
         <p class='process'>第{{page + 1}}题，共{{data.length}}题</p>
 
@@ -232,7 +219,7 @@
         </Card>
 
         <!-- 确定答案按钮 -->
-        <i-button v-if='isMultiSelect' class="confirm" type="primary" :disabled='userAnswer.length === 0' @click='confirm' size="large" long>确认</i-button>
+        <i-button v-if='sessionStorage.type != "wrong" && isMultiSelect' class="confirm" type="primary" :disabled='userAnswer.length === 0' @click='confirm' size="large" long>确认</i-button>
 
 
         <!-- 删除错题按钮 -->
@@ -245,12 +232,6 @@
             <i-button type="primary" @click="prev">上一题</i-button>
             <i-button type="primary" @click="next">下一题</i-button>
         </ButtonGroup>
-
-        <template>
-            <div class="toast" v-if="toastShow">
-                {{toastMessage}}
-            </div>
-        </template>
     </div>
 
     <!-- 引入必要的脚本 -->
@@ -271,8 +252,6 @@
                 userAnswer: [],
                 answer: false,
                 result: false,
-                toastShow: false,
-                toastMessage: "",
                 isMultiSelect: false
             },
             methods: {
@@ -361,7 +340,6 @@
                     wrong.splice(index, 1);
                     localStorage["wrong_" + this.fileId] = JSON.stringify(wrong);
                     this.questionChangeAlert(false);
-                    this.$Message.success('删除错题记录成功！');
                     window.location.reload();
                 },
                 next() {
@@ -428,22 +406,26 @@
 
                 questionChangeAlert(insert) {
                     if (insert) {
-                        this.toastMessage = "已加入错题本，可以选择错题模式强化练习！";
+                        this.$Message.success('已加入错题本，可以选择错题模式强化练习！');
                     } else {
-                        this.toastMessage = "已从错题本中删除";
+                        this.$Message.success('已从错题本中删除！');
                     }
-                    this.toastShow = true;
-                    setTimeout(() => {
-                        this.toastShow = false;
-                    }, 800);
                 },
-                
+
+                loadingStart() {
+                    if (sessionStorage.type != "wrong") {
+                        document.getElementById('el').style.display = 'none';
+                        document.getElementById('apploading').style.display = 'block';                        
+                    }
+                },
                 loadingSuccess() {
                     document.getElementById('el').style.display = 'block';
                     document.getElementById('apploading').style.display = 'none';
                 }
             },
             created() {
+                this.loadingStart();
+
                 this.fileName = sessionStorage.file;
                 this.fileId = sessionStorage.id;
 
@@ -481,7 +463,7 @@
                         this.loadingSuccess();
                     })
                     .catch((error) => {
-                        this.$Message.error('发生错误！');
+                        this.$Message.error('请刷新重试！如不能解决问题请联系管理员');
                     });
             }
         });
